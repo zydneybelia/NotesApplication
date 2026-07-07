@@ -1,30 +1,27 @@
-import React from 'react'
-
 export default function NoteList({ notes, onSelect, onDelete, activeId }) {
+  if (notes.length === 0) {
+    return <p className="notes-empty-hint">No notes match your search.</p>
+  }
+
   return (
-    <div className="note-list">
-      {notes.length === 0 && <div className="empty">No notes yet</div>}
-      <ul>
-        {notes.map((n) => (
-          <li
-            key={n.id}
-            className={"note-item" + (n.id === activeId ? ' active' : '')}
-            onClick={() => onSelect(n.id)}
-          >
-            <div className="note-title">{n.title || 'Untitled'}</div>
-            <div className="note-snippet">{(n.body || '').slice(0, 80)}</div>
-            <button
-              className="delete-btn"
-              onClick={(e) => {
-                e.stopPropagation()
-                onDelete(n.id)
-              }}
-            >
-              ×
-            </button>
-          </li>
-        ))}
-      </ul>
+    <div className="notes-list">
+      {notes.map((note) => (
+        <button
+          key={note.id}
+          className={'notes-list-item' + (note.id === activeId ? ' notes-list-item-active' : '')}
+          onClick={() => onSelect(note.id)}
+        >
+          <div className="notes-list-item-heading">
+            <p className="notes-list-item-title">{note.title || 'Untitled note'}</p>
+            <span className="notes-list-item-meta">
+              {note.edited_at ? new Date(note.edited_at).toLocaleDateString() : ''}
+            </span>
+          </div>
+          <p className="notes-list-item-preview">
+            {(note.content || '').slice(0, 60)}
+          </p>
+        </button>
+      ))}
     </div>
   )
 }
